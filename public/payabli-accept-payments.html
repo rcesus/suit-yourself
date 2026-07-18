@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment | SUIT YOURSELF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* Payment Method Styles */
+    .payment-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      color: #666;
+    }
+    .payment-divider hr {
+      flex: 1;
+      border: none;
+      border-top: 1px solid #ddd;
+    }
+    .payment-divider span {
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
+    .payment-tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 1.5rem;
+    }
+    .payment-tab {
+      flex: 1;
+      padding: 1rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: #666;
+      transition: all 0.2s;
+    }
+    .payment-tab:hover {
+      color: #000;
+    }
+    .payment-tab.active {
+      color: #000;
+      border-bottom-color: #000;
+    }
+
+    .manual-payment-section {
+      margin-top: 1rem;
+    }
+
+    #manual-payment-container {
+      min-height: 200px;
+    }
+
+    .pay-button {
+      width: 100%;
+      padding: 1rem 2rem;
+      background: #000;
+      color: #fff;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: background 0.2s;
+    }
+    .pay-button:hover {
+      background: #333;
+    }
+    .pay-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="checkout-page">
+  <!-- Header -->
+  <header class="header header-light header-minimal">
+    <nav class="nav">
+      <a href="/" class="logo">SUIT YOURSELF</a>
+      <span class="checkout-title">Payment</span>
+      <a href="/products.html" class="continue-shopping">Continue Shopping</a>
+    </nav>
+  </header>
+
+  <!-- Payment Content -->
+  <main class="checkout-container">
+    <!-- Payment Section -->
+    <section class="checkout-payment">
+      <div class="checkout-steps">
+        <!-- Customer Info -->
+        <div class="checkout-step" id="step-customer">
+          <h2>1. Contact Information</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" id="customer-first" placeholder="First name" required>
+            </div>
+            <div class="form-group">
+              <input type="text" id="customer-last" placeholder="Last name" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="email" id="customer-email" placeholder="Email address" required>
+          </div>
+        </div>
+
+        <!-- Address Info -->
+        <div class="checkout-step" id="step-address">
+          <h2>2. Billing Address</h2>
+          <div class="form-group">
+            <input type="text" id="customer-address" placeholder="Street address" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" id="customer-city" placeholder="City" required>
+            </div>
+            <div class="form-group">
+              <input type="text" id="customer-state" placeholder="State" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" id="customer-zip" placeholder="ZIP code" required>
+          </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="checkout-step" id="step-payment">
+          <h2>3. Payment</h2>
+          <p class="payment-subtitle">Select a payment method to complete your transaction</p>
+
+          <!-- Loading State -->
+          <div id="payment-loading" class="loading-placeholder">
+            <div class="spinner"></div>
+            <span>Loading payment options...</span>
+          </div>
+
+          <!-- Express Checkout (Apple Pay / Google Pay) -->
+          <div id="express-checkout-section" class="hidden">
+            <div id="express-checkout-container"></div>
+
+            <!-- Divider -->
+            <div class="payment-divider">
+              <hr>
+              <span>or pay with card or bank account</span>
+              <hr>
+            </div>
+          </div>
+
+          <!-- Manual Payment Methods (Card / ACH) -->
+          <div id="manual-payment-section" class="manual-payment-section hidden">
+            <!-- Tabs -->
+            <div class="payment-tabs">
+              <button class="payment-tab active" id="tab-card" type="button">Credit / Debit Card</button>
+              <button class="payment-tab" id="tab-ach" type="button">Bank Account (ACH)</button>
+            </div>
+
+            <!-- Payment Form Container -->
+            <div id="manual-payment-container"></div>
+
+            <!-- Pay Button -->
+            <button type="button" class="pay-button" id="btn-pay">
+              Pay <span id="btn-pay-amount">$0.00</span>
+            </button>
+          </div>
+
+          <div class="payment-status" id="payment-status"></div>
+
+          <div class="secure-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0110 0v4"></path>
+            </svg>
+            <span>Secure payment - Your payment is protected</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer footer-minimal">
+    <p>&copy; 2025 Suit Yourself. Secure payments powered by Payabli.</p>
+  </footer>
+
+  <script>
+    // Form submission and payment handling
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize form listeners
+      const emailField = document.getElementById('customer-email');
+      const firstField = document.getElementById('customer-first');
+      const lastField = document.getElementById('customer-last');
+      const addressField = document.getElementById('customer-address');
+      const cityField = document.getElementById('customer-city');
+      const stateField = document.getElementById('customer-state');
+      const zipField = document.getElementById('customer-zip');
+
+      // Validate all fields before payment
+      function validateForm() {
+        return (
+          emailField.value.trim() !== '' &&
+          firstField.value.trim() !== '' &&
+          lastField.value.trim() !== '' &&
+          addressField.value.trim() !== '' &&
+          cityField.value.trim() !== '' &&
+          stateField.value.trim() !== '' &&
+          zipField.value.trim() !== ''
+        );
+      }
+
+      // Pay button listener
+      const payBtn = document.getElementById('btn-pay');
+      payBtn.addEventListener('click', function() {
+        if (!validateForm()) {
+          const statusEl = document.getElementById('payment-status');
+          statusEl.textContent = 'Please fill in all fields';
+          statusEl.className = 'payment-status error';
+          return;
+        }
+
+        // Prepare customer data
+        const customerData = {
+          firstName: firstField.value.trim(),
+          lastName: lastField.value.trim(),
+          email: emailField.value.trim(),
+          address: addressField.value.trim(),
+          city: cityField.value.trim(),
+          state: stateField.value.trim(),
+          zip: zipField.value.trim()
+        };
+
+        console.log('Customer data ready for payment:', customerData);
+      });
+
+      // Tab switching
+      const tabs = document.querySelectorAll('.payment-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          tabs.forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
