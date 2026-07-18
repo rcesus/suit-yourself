@@ -174,13 +174,17 @@ input {
 }
 
 .header-minimal .nav {
-  justify-content: center;
-  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.25rem 2rem;
 }
 
 .header-minimal .logo {
-  position: absolute;
-  left: 2rem;
+  font-size: 1.75rem;
+  color: var(--color-black);
+  white-space: nowrap;
 }
 
 .checkout-title {
@@ -188,13 +192,15 @@ input {
   font-weight: 400;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--color-black);
+  text-align: center;
 }
 
 .continue-shopping {
-  position: absolute;
-  right: 2rem;
   font-size: 0.75rem;
-  color: var(--color-gray-500);
+  color: var(--color-gray-600);
+  white-space: nowrap;
+  text-align: right;
 }
 
 /* =================================================================
