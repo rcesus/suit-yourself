@@ -408,7 +408,7 @@ app.post('/api/cart/:cartId/update', (req, res) => {
 // =============================================================================
 
 app.post('/api/orders/create', (req, res) => {
-  const { cartId, customer, items } = req.body;
+  const { cartId, customer, shipping, items } = req.body;
   
   // Accept items directly from client (localStorage-based cart)
   let cartItems = items;
@@ -436,12 +436,12 @@ app.post('/api/orders/create', (req, res) => {
     subtotal: subtotal,
     serviceFee: 0,
     total: subtotal,
-    customer: customer || {},
+    customer: { ...customer, ...shipping } || {},
     createdAt: new Date()
   };
   
   orders.set(orderId, order);
-  
+
   res.json({ orderId, total: order.total });
 });
 
@@ -457,7 +457,7 @@ app.get('/api/checkout/config/:orderId', (req, res) => {
   if (order.status !== 'pending_payment') {
     return res.status(400).json({ error: 'Order is not pending payment' });
   }
-  
+
   const timestamp = Date.now();
   const checkoutHash = generateCheckoutHash(orderId, order.total, order.serviceFee, timestamp);
   
@@ -480,7 +480,12 @@ app.get('/api/checkout/config/:orderId', (req, res) => {
     customerData: {
       firstName: order.customer.firstName || '',
       lastName: order.customer.lastName || '',
-      billingEmail: order.customer.email || ''
+      billingEmail: order.customer.email || '',
+      shippingAddress1: order.customer.address || '',
+      shippingAddress2: order.customer.address2 || '',
+      shippingCity: order.customer.city || '',
+      shippingState: order.customer.state || '',
+      shippingZip: order.customer.zip || ''
     }
   };
   

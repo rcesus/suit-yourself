@@ -142,6 +142,9 @@
           <div class="form-group">
             <input type="text" id="customer-address" placeholder="Street address" required>
           </div>
+          <div class="form-group">
+            <input type="text" id="customer-address2" placeholder="Apt, Suite, or Building (optional)">
+          </div>
           <div class="form-row">
             <div class="form-group">
               <input type="text" id="customer-city" placeholder="City" required>
@@ -273,6 +276,7 @@
       const firstName = document.getElementById('customer-first').value;
       const lastName = document.getElementById('customer-last').value;
       const address = document.getElementById('customer-address').value;
+      const address2 = document.getElementById('customer-address2').value;
       const city = document.getElementById('customer-city').value;
       const state = document.getElementById('customer-state').value;
       const zip = document.getElementById('customer-zip').value;
@@ -300,7 +304,7 @@
           body: JSON.stringify({
             cartId: Store.getCartId(),
             customer: { email, firstName, lastName },
-            shipping: { address, city, state, zip },
+            shipping: { address, address2, city, state, zip },
             items: cart.items
           })
         });
