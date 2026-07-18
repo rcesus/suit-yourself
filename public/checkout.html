@@ -760,25 +760,33 @@
     // Pay button
     document.getElementById('btn-pay').addEventListener('click', executePayment);
     
-    // Auto-trigger payment load when customer info is filled
+    // Auto-trigger payment load when all required fields are filled
     let paymentLoaded = false;
-    
+
     function checkAndLoadPayment() {
       if (paymentLoaded) return;
-      
+
       const email = document.getElementById('customer-email').value;
       const firstName = document.getElementById('customer-first').value;
       const lastName = document.getElementById('customer-last').value;
-      
-      if (email && firstName && lastName) {
+      const address = document.getElementById('customer-address').value;
+      const city = document.getElementById('customer-city').value;
+      const state = document.getElementById('customer-state').value;
+      const zip = document.getElementById('customer-zip').value;
+
+      if (email && firstName && lastName && address && city && state && zip) {
         paymentLoaded = true;
         createOrderAndLoadPayment();
       }
     }
-    
+
     document.getElementById('customer-email').addEventListener('blur', checkAndLoadPayment);
     document.getElementById('customer-first').addEventListener('blur', checkAndLoadPayment);
     document.getElementById('customer-last').addEventListener('blur', checkAndLoadPayment);
+    document.getElementById('customer-address').addEventListener('blur', checkAndLoadPayment);
+    document.getElementById('customer-city').addEventListener('blur', checkAndLoadPayment);
+    document.getElementById('customer-state').addEventListener('blur', checkAndLoadPayment);
+    document.getElementById('customer-zip').addEventListener('blur', checkAndLoadPayment);
     
     // Initialize
     Store.init();
