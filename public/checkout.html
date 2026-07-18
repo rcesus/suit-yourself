@@ -136,9 +136,28 @@
           </div>
         </div>
 
+        <!-- Shipping Address -->
+        <div class="checkout-step" id="step-shipping">
+          <h2>2. Shipping Address</h2>
+          <div class="form-group">
+            <input type="text" id="customer-address" placeholder="Street address" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" id="customer-city" placeholder="City" required>
+            </div>
+            <div class="form-group" style="flex: 0 0 25%;">
+              <input type="text" id="customer-state" placeholder="State" required>
+            </div>
+            <div class="form-group" style="flex: 0 0 25%;">
+              <input type="text" id="customer-zip" placeholder="ZIP" required>
+            </div>
+          </div>
+        </div>
+
         <!-- Payment Methods -->
         <div class="checkout-step" id="step-payment">
-          <h2>2. Payment</h2>
+          <h2>3. Payment</h2>
           <p class="payment-subtitle">Select a payment method to complete your order</p>
           
           <!-- Loading State -->
@@ -253,9 +272,18 @@
       const email = document.getElementById('customer-email').value;
       const firstName = document.getElementById('customer-first').value;
       const lastName = document.getElementById('customer-last').value;
+      const address = document.getElementById('customer-address').value;
+      const city = document.getElementById('customer-city').value;
+      const state = document.getElementById('customer-state').value;
+      const zip = document.getElementById('customer-zip').value;
 
       if (!email || !firstName || !lastName) {
         showStatus('error', 'Please fill in all contact fields');
+        return;
+      }
+
+      if (!address || !city || !state || !zip) {
+        showStatus('error', 'Please fill in all shipping address fields');
         return;
       }
 
@@ -272,6 +300,7 @@
           body: JSON.stringify({
             cartId: Store.getCartId(),
             customer: { email, firstName, lastName },
+            shipping: { address, city, state, zip },
             items: cart.items
           })
         });
