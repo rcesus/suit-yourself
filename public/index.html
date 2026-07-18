@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUIT YOURSELF | Menswear for the Modern Gentleman</title>
+  <meta name="description" content="Impeccably crafted suits and menswear. Secure checkout with Apple Pay and Google Pay.">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav">
+      <div class="nav-left">
+        <button class="menu-btn" onclick="toggleMenu()">
+          <span></span>
+          <span></span>
+        </button>
+        <a href="/" class="logo">SUIT YOURSELF</a>
+      </div>
+      <div class="nav-center">
+        <a href="/products.html">Shop All</a>
+        <a href="/products.html?category=suits">Suits</a>
+        <a href="/products.html?category=jackets">Jackets</a>
+        <a href="/products.html?category=shirts">Shirts</a>
+        <a href="/products.html?category=coats">Coats</a>
+      </div>
+      <div class="nav-right">
+        <button class="cart-btn" onclick="openCart()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 01-8 0"></path>
+          </svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>The Art of Tailoring</h1>
+      <p>Impeccably crafted suits and menswear for the modern gentleman</p>
+      <a href="/products.html" class="btn btn-primary">Shop Collection</a>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1200" alt="Tailored Suit">
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="categories">
+    <div class="category-grid">
+      <a href="/products.html?category=suits" class="category-card">
+        <img src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600" alt="Suits">
+        <div class="category-overlay">
+          <h3>Suits</h3>
+          <span>Explore</span>
+        </div>
+      </a>
+      <a href="/products.html?category=jackets" class="category-card">
+        <img src="https://images.unsplash.com/photo-1592878904946-b3cd8ae243d0?w=600" alt="Jackets">
+        <div class="category-overlay">
+          <h3>Jackets</h3>
+          <span>Explore</span>
+        </div>
+      </a>
+      <a href="/products.html?category=shirts" class="category-card">
+        <img src="https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=600" alt="Shirts">
+        <div class="category-overlay">
+          <h3>Shirts</h3>
+          <span>Explore</span>
+        </div>
+      </a>
+      <a href="/products.html?category=coats" class="category-card">
+        <img src="https://images.unsplash.com/photo-1544923246-77307dd628b5?w=600" alt="Coats">
+        <div class="category-overlay">
+          <h3>Coats</h3>
+          <span>Explore</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Featured -->
+  <section class="featured">
+    <h2>New Arrivals</h2>
+    <div class="product-grid" id="featured-products">
+      <!-- Populated by JS -->
+    </div>
+    <a href="/products.html" class="btn btn-secondary">View All</a>
+  </section>
+
+  <!-- Services -->
+  <section class="services">
+    <div class="service">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <rect x="1" y="3" width="15" height="13"></rect>
+        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+      </svg>
+      <h4>Free Shipping</h4>
+      <p>On all orders over $200</p>
+    </div>
+    <div class="service">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <polyline points="23 4 23 10 17 10"></polyline>
+        <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path>
+      </svg>
+      <h4>Easy Returns</h4>
+      <p>30-day return policy</p>
+    </div>
+    <div class="service">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <path d="M14 9V5a3 3 0 00-6 0v4"></path>
+        <rect x="2" y="9" width="20" height="13" rx="2"></rect>
+      </svg>
+      <h4>Secure Checkout</h4>
+      <p>Apple Pay & Google Pay</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="logo">SUIT YOURSELF</span>
+        <p>Dress how you want. Pay how you want.</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h5>Shop</h5>
+          <a href="/products.html?category=suits">Suits</a>
+          <a href="/products.html?category=jackets">Jackets</a>
+          <a href="/products.html?category=shirts">Shirts</a>
+        </div>
+        <div>
+          <h5>Support</h5>
+          <a href="#">Shipping</a>
+          <a href="#">Returns</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Suit Yourself. E-Commerce POC by Payabli Sales Engineering.</p>
+    </div>
+  </footer>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3>Your Bag</h3>
+      <button onclick="closeCart()">&times;</button>
+    </div>
+    <div class="cart-drawer-items" id="cart-items">
+      <!-- Populated by JS -->
+    </div>
+    <div class="cart-drawer-footer" id="cart-footer" style="display: none;">
+      <div class="cart-total">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0.00</span>
+      </div>
+      <a href="/email.html" class="btn btn-primary btn-full">Checkout</a>
+    </div>
+  </div>
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+
+  <script src="/js/store.js"></script>
+  <script>
+    // Load featured products
+    async function loadFeatured() {
+      const products = await Store.getProducts();
+      const featured = products.slice(0, 4);
+      const grid = document.getElementById('featured-products');
+      
+      grid.innerHTML = featured.map(p => `
+        <a href="/product.html?id=${p.id}" class="product-card">
+          <div class="product-image">
+            <img src="${p.image}" alt="${p.name}">
+          </div>
+          <div class="product-info">
+            <h4>${p.name}</h4>
+            <p class="price">$${p.price.toFixed(2)}</p>
+          </div>
+        </a>
+      `).join('');
+    }
+    
+    loadFeatured();
+    Store.init();
+  </script>
+</body>
+</html>

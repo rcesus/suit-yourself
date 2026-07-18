@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product | SUIT YOURSELF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header header-light">
+    <nav class="nav">
+      <div class="nav-left">
+        <a href="/" class="logo">SUIT YOURSELF</a>
+      </div>
+      <div class="nav-center">
+        <a href="/products.html">Shop All</a>
+        <a href="/products.html?category=suits">Suits</a>
+        <a href="/products.html?category=jackets">Jackets</a>
+        <a href="/products.html?category=shirts">Shirts</a>
+        <a href="/products.html?category=coats">Coats</a>
+      </div>
+      <div class="nav-right">
+        <button class="cart-btn" onclick="openCart()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 01-8 0"></path>
+          </svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Product Detail -->
+  <main class="product-detail" id="product-detail">
+    <div class="product-gallery" id="product-gallery">
+      <!-- Populated by JS -->
+    </div>
+    
+    <div class="product-details" id="product-details">
+      <!-- Populated by JS -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>&copy; 2025 Suit Yourself. E-Commerce POC by Payabli Sales Engineering.</p>
+    </div>
+  </footer>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3>Your Bag</h3>
+      <button onclick="closeCart()">&times;</button>
+    </div>
+    <div class="cart-drawer-items" id="cart-items"></div>
+    <div class="cart-drawer-footer" id="cart-footer" style="display: none;">
+      <div class="cart-total">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0.00</span>
+      </div>
+      <a href="/email.html" class="btn btn-primary btn-full">Checkout</a>
+    </div>
+  </div>
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+
+  <!-- Added to cart notification -->
+  <div class="notification" id="notification">
+    <span>Added to bag</span>
+  </div>
+
+  <script src="/js/store.js"></script>
+  <script>
+    let currentProduct = null;
+    let selectedSize = null;
+    
+    async function loadProduct() {
+      const params = new URLSearchParams(window.location.search);
+      const productId = params.get('id');
+      
+      if (!productId) {
+        window.location.href = '/products.html';
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/api/products/${productId}`);
+        if (!response.ok) throw new Error('Product not found');
+        currentProduct = await response.json();
+        renderProduct();
+        document.title = `${currentProduct.name} | SUIT YOURSELF`;
+      } catch (error) {
+        window.location.href = '/products.html';
+      }
+    }
+    
+    function renderProduct() {
+      const gallery = document.getElementById('product-gallery');
+      const details = document.getElementById('product-details');
+      
+      gallery.innerHTML = `
+        <div class="main-image">
+          <img src="${currentProduct.image}" alt="${currentProduct.name}" id="main-image">
+        </div>
+        ${currentProduct.images.length > 1 ? `
+          <div class="thumbnail-row">
+            ${currentProduct.images.map((img, i) => `
+              <button class="thumbnail ${i === 0 ? 'active' : ''}" onclick="changeImage('${img}', this)">
+                <img src="${img}" alt="">
+              </button>
+            `).join('')}
+          </div>
+        ` : ''}
+      `;
+      
+      details.innerHTML = `
+        <nav class="breadcrumb">
+          <a href="/">Home</a>
+          <span>/</span>
+          <a href="/products.html?category=${currentProduct.category}">${capitalize(currentProduct.category)}</a>
+          <span>/</span>
+          <span>${currentProduct.name}</span>
+        </nav>
+        
+        <h1>${currentProduct.name}</h1>
+        <p class="price">$${currentProduct.price.toFixed(2)}</p>
+        
+        <p class="description">${currentProduct.description}</p>
+        
+        <div class="size-section">
+          <label>Size</label>
+          <div class="size-options">
+            ${currentProduct.sizes.map(size => `
+              <button class="size-btn" onclick="selectSize('${size}', this)">${size}</button>
+            `).join('')}
+          </div>
+        </div>
+        
+        <button class="btn btn-primary btn-full add-to-cart-btn" onclick="addToCart()" id="add-to-cart-btn" disabled>
+          Select a Size
+        </button>
+        
+        <div class="product-meta">
+          <div class="meta-section">
+            <h4>Details</h4>
+            <ul>
+              ${currentProduct.details.map(d => `<li>${d}</li>`).join('')}
+            </ul>
+          </div>
+          <div class="meta-section">
+            <h4>Shipping</h4>
+            <p>Free standard shipping on orders over $200. Express shipping available at checkout.</p>
+          </div>
+        </div>
+      `;
+    }
+    
+    function changeImage(src, btn) {
+      document.getElementById('main-image').src = src;
+      document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    
+    function selectSize(size, btn) {
+      selectedSize = size;
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      const addBtn = document.getElementById('add-to-cart-btn');
+      addBtn.disabled = false;
+      addBtn.textContent = 'Add to Bag';
+    }
+    
+    async function addToCart() {
+      if (!selectedSize || !currentProduct) return;
+      
+      await Store.addToCart(currentProduct.id, selectedSize);
+      
+      // Show notification
+      const notification = document.getElementById('notification');
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 2000);
+      
+      // Open cart drawer
+      setTimeout(() => openCart(), 300);
+    }
+    
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    
+    loadProduct();
+    Store.init();
+  </script>
+</body>
+</html>

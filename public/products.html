@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop | SUIT YOURSELF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header header-light">
+    <nav class="nav">
+      <div class="nav-left">
+        <a href="/" class="logo">SUIT YOURSELF</a>
+      </div>
+      <div class="nav-center">
+        <a href="/products.html">Shop All</a>
+        <a href="/products.html?category=suits">Suits</a>
+        <a href="/products.html?category=jackets">Jackets</a>
+        <a href="/products.html?category=shirts">Shirts</a>
+        <a href="/products.html?category=coats">Coats</a>
+      </div>
+      <div class="nav-right">
+        <button class="cart-btn" onclick="openCart()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 01-8 0"></path>
+          </svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Page Content -->
+  <main class="page-content">
+    <div class="page-header">
+      <h1 id="page-title">All Products</h1>
+      <p id="product-count">0 products</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <button class="filter-btn active" data-category="">All</button>
+      <button class="filter-btn" data-category="suits">Suits</button>
+      <button class="filter-btn" data-category="jackets">Jackets</button>
+      <button class="filter-btn" data-category="shirts">Shirts</button>
+      <button class="filter-btn" data-category="pants">Pants</button>
+      <button class="filter-btn" data-category="coats">Coats</button>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid product-grid-large" id="product-grid">
+      <!-- Populated by JS -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-bottom">
+      <p>&copy; 2025 Suit Yourself. E-Commerce POC by Payabli Sales Engineering.</p>
+    </div>
+  </footer>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3>Your Bag</h3>
+      <button onclick="closeCart()">&times;</button>
+    </div>
+    <div class="cart-drawer-items" id="cart-items"></div>
+    <div class="cart-drawer-footer" id="cart-footer" style="display: none;">
+      <div class="cart-total">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0.00</span>
+      </div>
+      <a href="/email.html" class="btn btn-primary btn-full">Checkout</a>
+    </div>
+  </div>
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+
+  <script src="/js/store.js"></script>
+  <script>
+    let allProducts = [];
+    
+    async function loadProducts(category = '') {
+      const products = await Store.getProducts(category);
+      allProducts = products;
+      renderProducts(products);
+      updateTitle(category);
+    }
+    
+    function renderProducts(products) {
+      const grid = document.getElementById('product-grid');
+      document.getElementById('product-count').textContent = `${products.length} products`;
+      
+      grid.innerHTML = products.map(p => `
+        <a href="/product.html?id=${p.id}" class="product-card">
+          <div class="product-image">
+            <img src="${p.image}" alt="${p.name}">
+          </div>
+          <div class="product-info">
+            <h4>${p.name}</h4>
+            <p class="price">$${p.price.toFixed(2)}</p>
+          </div>
+        </a>
+      `).join('');
+    }
+    
+    function updateTitle(category) {
+      const titles = {
+        '': 'All Products',
+        'suits': 'Suits',
+        'jackets': 'Jackets & Blazers',
+        'shirts': 'Shirts',
+        'pants': 'Trousers',
+        'coats': 'Coats'
+      };
+      document.getElementById('page-title').textContent = titles[category] || 'All Products';
+    }
+    
+    function setActiveFilter(category) {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.category === category);
+      });
+    }
+    
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.dataset.category;
+        setActiveFilter(category);
+        loadProducts(category);
+        history.pushState({}, '', category ? `?category=${category}` : '/products.html');
+      });
+    });
+    
+    // Initial load
+    const params = new URLSearchParams(window.location.search);
+    const initialCategory = params.get('category') || '';
+    setActiveFilter(initialCategory);
+    loadProducts(initialCategory);
+    Store.init();
+  </script>
+</body>
+</html>

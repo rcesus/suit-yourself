@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed | SUIT YOURSELF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="success-page">
+  <!-- Header -->
+  <header class="header header-light header-minimal">
+    <nav class="nav">
+      <a href="/" class="logo">SUIT YOURSELF</a>
+    </nav>
+  </header>
+
+  <!-- Success Content -->
+  <main class="success-container">
+    <div class="success-content" id="success-content">
+      <div class="loading-placeholder">
+        <div class="spinner"></div>
+        <span>Loading order details...</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer footer-minimal">
+    <p>&copy; 2025 Suit Yourself.</p>
+  </footer>
+
+  <script>
+    async function loadOrderDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get('orderId');
+      
+      if (!orderId) {
+        window.location.href = '/';
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/api/orders/${orderId}`);
+        if (!response.ok) throw new Error('Order not found');
+        const order = await response.json();
+        renderSuccess(order);
+      } catch (error) {
+        document.getElementById('success-content').innerHTML = `
+          <div class="error-state">
+            <h2>Order Not Found</h2>
+            <p>We couldn't find your order. Please check your email for confirmation.</p>
+            <a href="/" class="btn btn-primary">Return Home</a>
+          </div>
+        `;
+      }
+    }
+    
+    function renderSuccess(order) {
+      const content = document.getElementById('success-content');
+      
+      content.innerHTML = `
+        <div class="success-icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        
+        <h1>Thank You for Your Order</h1>
+        <p class="order-number">Order #${order.id}</p>
+        
+        <div class="success-message">
+          <p>We've received your order and are preparing it for shipment.</p>
+          <p>A confirmation email has been sent to <strong>${order.customer.email || 'your email'}</strong>.</p>
+        </div>
+        
+        <div class="order-summary-card">
+          <h3>Order Summary</h3>
+          
+          <div class="order-items">
+            ${order.items.map(item => `
+              <div class="order-item">
+                <img src="${item.image}" alt="${item.name}">
+                <div class="item-info">
+                  <h4>${item.name}</h4>
+                  <p>Size: ${item.size} | Qty: ${item.quantity}</p>
+                </div>
+                <span class="item-price">$${(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="order-totals">
+            <div class="total-row">
+              <span>Subtotal</span>
+              <span>$${order.subtotal.toFixed(2)}</span>
+            </div>
+            <div class="total-row">
+              <span>Shipping</span>
+              <span>Free</span>
+            </div>
+            <div class="total-row">
+              <span>Service Fee</span>
+              <span>$${order.serviceFee.toFixed(2)}</span>
+            </div>
+            <div class="total-row total-final">
+              <span>Total</span>
+              <span>$${order.total.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="success-actions">
+          <a href="/" class="btn btn-primary">Continue Shopping</a>
+        </div>
+      `;
+    }
+    
+    loadOrderDetails();
+  </script>
+</body>
+</html>
