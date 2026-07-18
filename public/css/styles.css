@@ -716,10 +716,20 @@ input {
 }
 
 .cart-item-remove {
+  background: none;
+  border: none;
   font-size: 0.75rem;
   color: var(--color-gray-500);
   text-decoration: underline;
   margin-top: 0.5rem;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: color var(--transition);
+}
+
+.cart-item-remove:hover {
+  color: var(--color-black);
 }
 
 .cart-empty {
